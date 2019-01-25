@@ -4,14 +4,21 @@ import java.io.File
 import kotlin.math.sqrt
 import kotlin.random.Random
 
+//import kotlin.random.Random
+
 fun flySwatProb(outRad : Double, thick : Double, width : Double, spacing : Double, flyRad : Double ) : Double{
     val nSims = 10_000_000
     var escCount = 0
     var simCout =0
-    repeat(nSims){
+    val xArr = (0 .. nSims).shuffled()
+    val yArr = (0 .. nSims).shuffled()
+    val delta = (outRad - thick - flyRad)/2.0/nSims
+    repeat(nSims+1){
 
-        val x = Random.nextDouble(0.0, outRad - thick -flyRad)
-        val y = Random.nextDouble(0.0, outRad - thick - flyRad)
+        val x = xArr[it].toDouble()/nSims.toDouble()*(outRad - thick - flyRad) +
+                Random.nextDouble(-delta, delta)
+        val y = yArr[it].toDouble()/nSims.toDouble()*(outRad - thick - flyRad) +
+                Random.nextDouble(-delta, delta)
         if (sqrt(x*x + y*y) < outRad - thick - flyRad){
             simCout++
             val xRem = x % (width + spacing)
