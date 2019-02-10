@@ -8,7 +8,7 @@ fun minScalarProd(fn: String){
     var currLine = 1
     for(ii in (1..nT)){
         val vals1 = lines[currLine+1].split(' ','\t').map { it.toLong() }.sorted()
-        val vals2 = lines[currLine+2].split(' ','\t').map { it.toLong() }.sortedDescending()
+        val vals2 = lines[currLine+2].split(' ','\t').map { it.toLong() }.sortedDescending<Long>()
         val minSc = vals1.foldIndexed(0){ind, acc: Long, it:Long -> acc + it*vals2[ind]}
         println("Case #$ii : $minSc")
         currLine +=3
