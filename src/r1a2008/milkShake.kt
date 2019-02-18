@@ -12,10 +12,14 @@ fun readSolveTC(lines :List<String>, caseNo : Int) : Int{
     val nCust = lines[1].toInt()
     data class CustFlavs(val ind : Int, val malted : Int, val nMalted :MutableSet<Int>)
     var currLine = 2
-   // we have 2 sets 1 set gr
+    // we have 2 maps for customers, 1 grouped by the number of non-malted options, This is needed to check
+    // for the customers with no mon-malkted options, who force a flavor to be malted.
+    // /The other map is by
+    // each non-malting option. When we decide 1 flavor is malted, we have to remove that as an
+    // option for any customer who likes it as a non-malted shake.
     val custByNopts = mutableMapOf<Int,MutableSet<CustFlavs>>()
     val custByNonMaltOpts = mutableMapOf<Int, MutableSet<CustFlavs>>()
-    custByNopts[0] = mutableSetOf()
+
     for(ii in (0 until nCust)){
         val custPerfs = lines[currLine].split(' ','\t')
             .map{it.toInt()}.drop(1).chunked(2)
@@ -39,7 +43,9 @@ fun readSolveTC(lines :List<String>, caseNo : Int) : Int{
             return currLine
         }
         malted.add(cust.malted)
-
+        //for all customers who have this as a non-malt option, it needs to be removed.
+        // so they move down in the map where they are grouped by number of non-malted
+        // options, since their number of non-malted options reduces by 1
         for(custR in custByNonMaltOpts.remove(cust.malted)?: mutableSetOf()) {
             val len = custR.nMalted.size
             custR.nMalted.remove(cust.malted)
